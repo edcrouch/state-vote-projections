@@ -15,5 +15,7 @@ You can run those like this: `./state-vote-projections-linux nevada`.
 
 ## Compiling
 `env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o state-vote-projections-linux`
+
 `env GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o state-vote-projections-windows.exe`
+
 `env GOOS=darwin GOARCH=amd64 CGO_ENABLED=0 go build -o state-vote-projections-mac`
