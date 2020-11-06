@@ -11,7 +11,7 @@ Run like this: `go run main.go nevada` or `go run main.go new-mexico`.
 
 There are also prebuilt binaries available that accept the state name as an argument.
 
-You can run those like this: `./state-vote-projections-linux nevada`.
+You can run those like this: `./state-vote-projections-linux new-mexico`.
 
 ## Compiling
 `env GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o state-vote-projections-linux`
