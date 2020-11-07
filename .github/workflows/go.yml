@@ -41,6 +41,7 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./state-vote-projections-${GOOS}
           asset_name: state-vote-projections-${GOOS}
+          asset_content_type: application/octet-stream
       - name: Upload Mac Binary
         uses: actions/upload-release-asset@v1
         env:
@@ -50,3 +51,4 @@ jobs:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: ./state-vote-projections-${GOOS}
           asset_name: state-vote-projections-${GOOS}
+          asset_content_type: application/octet-stream
