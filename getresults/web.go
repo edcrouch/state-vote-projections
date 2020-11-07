@@ -11,7 +11,7 @@ var host = "https://www.nbcnews.com"
 var endpoint = "/politics/2020-elections/%state%-president-results?format=json"
 
 // Retrieve ...
-func Retrieve(state string) map[string]ResultRow {
+func Retrieve(state string) ElectionData {
 	resp, err := http.Get(host + strings.Replace(endpoint, "%state%", state, 1))
 
 	if err != nil {
@@ -37,7 +37,7 @@ func Retrieve(state string) map[string]ResultRow {
 }
 
 // FormatData ...
-func formatData(data *WebResponse) map[string]ResultRow {
+func formatData(data *WebResponse) ElectionData {
 	var bidenData map[string]CountyResults
 	var trumpData map[string]CountyResults
 	results := make(map[string]ResultRow)
@@ -53,13 +53,17 @@ func formatData(data *WebResponse) map[string]ResultRow {
 		results[v.Name] = ResultRow{
 			Name:      v.Name,
 			PercentIn: v.PercentIn,
-			// Biden: getCountyResults
-			Biden: bidenData[v.Name],
-			Trump: trumpData[v.Name],
+			Biden:     bidenData[v.Name],
+			Trump:     trumpData[v.Name],
 		}
 	}
 
-	return results
+	return ElectionData{
+		Counties: results,
+		State: StateData{
+			PercentIn: data.PercentOfExpectedVoteReceived,
+		},
+	}
 }
 
 func createCandidateResults(results []CountyResults) map[string]CountyResults {
@@ -71,6 +75,12 @@ func createCandidateResults(results []CountyResults) map[string]CountyResults {
 	return data
 }
 
+// ElectionData ...
+type ElectionData struct {
+	Counties map[string]ResultRow
+	State    StateData
+}
+
 // ResultRow ...
 type ResultRow struct {
 	Name      string
@@ -79,16 +89,16 @@ type ResultRow struct {
 	Trump     CountyResults
 }
 
-// FormattedResults ...
-type FormattedResults struct {
-	Trump map[string]CountyResults
-	Biden map[string]CountyResults
+// StateData ...
+type StateData struct {
+	PercentIn int
 }
 
 // WebResponse ...
 type WebResponse struct {
-	CandidateCountyResults []CandidateCountyResult `json:"candidateCountyResults"`
-	CountiesPercentIn      []CountyPercentIn       `json:"countiesPercentIn"`
+	CandidateCountyResults        []CandidateCountyResult `json:"candidateCountyResults"`
+	CountiesPercentIn             []CountyPercentIn       `json:"countiesPercentIn"`
+	PercentOfExpectedVoteReceived int                     `json:"percentOfExpectedVoteReceived"`
 }
 
 // CandidateCountyResult ...

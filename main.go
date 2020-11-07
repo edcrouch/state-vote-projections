@@ -19,7 +19,7 @@ func main() {
 	createData(results, state)
 }
 
-func createData(results map[string]getresults.ResultRow, state string) {
+func createData(results getresults.ElectionData, state string) {
 	data := make([][]string, 0)
 
 	var totalVotesBiden int
@@ -31,7 +31,7 @@ func createData(results map[string]getresults.ResultRow, state string) {
 
 	p := message.NewPrinter(language.English)
 
-	for i, v := range results {
+	for i, v := range results.Counties {
 		projectedBiden := generateProjection(v.Biden.VotesReceived, v.PercentIn)
 		projectedTrump := generateProjection(v.Trump.VotesReceived, v.PercentIn)
 
@@ -109,7 +109,7 @@ func createData(results map[string]getresults.ResultRow, state string) {
 
 	appendRow(table, []string{
 		"Total",
-		"",
+		p.Sprintf("%.d%%", results.State.PercentIn),
 		"Biden",
 		p.Sprintf("%d", totalVotesBiden),
 		p.Sprintf("%d", totalProjectedBiden),
