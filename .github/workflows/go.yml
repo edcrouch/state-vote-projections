@@ -1,0 +1,51 @@
+on:
+  push:
+    tags:
+      - 'v*'
+name: Create Release
+
+jobs:
+  build:
+    env:
+      GOARCH: amd64
+      CGO_ENABLED: 0
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Build Linux
+        env: 
+          GOOS: linux
+        run: go build -o state-vote-projections-${GOOS}
+      - name: Build Mac
+        env:
+          GOOS: darwin
+        run: go build -o state-vote-projections-${GOOS}
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with: 
+          tag_name: ${ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false  
+      - name: Upload Linux Binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOOS: linux
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./state-vote-projections-${GOOS}
+          asset_name: state-vote-projections-${GOOS}
+      - name: Upload Mac Binary
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GOOS: darwin
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./state-vote-projections-${GOOS}
+          asset_name: state-vote-projections-${GOOS}
